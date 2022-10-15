@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
 import { topRated, bestSelling, onSale } from "../../utilities/enums";
 import Footer from "../Footer";
 
 export default function AboutUs() {
+  const [topRated, setTopRated] = useState([])
+  const [bestSelling, setBestSelling] = useState([])
+  const [onSale, setOnSale] = useState([]);
+  const { getAllPopularProducts } = bindActionCreators(
+    actionPopularProducts, useDispatch()
+  )
+
+  useEffect(() => {
+    getAllPopularProducts().then((response) => {
+      setTopRated(
+        response.payload.filter((product) => product.type === "topRated")
+      )
+      setBestSelling(
+        response.payload.filter((product) => product.type === "bestSelling")
+      )
+      
+    })
+  })
   const renderPopular = (data) => {
-    return data.map((product) => (
+    return data.map((product) => {(
       <div
         className="d-flex align-items-start justify-content-start"
         key={data.id}

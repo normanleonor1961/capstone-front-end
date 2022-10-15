@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { specials } from "../utilities/enums";
+import * as actionProduct from "../redux/actions/actionProduct"
+import { getAllPopularProducts } from "../redux/actions/actionPopularProduct";
+// import { specials } from "../utilities/enums";
 
 export default function Specials() {
-  const renderSpecials = () => {
+  const [specials, setSpecials] = useState([]);
+  const { getAllProducts } = bindActionCreators(actionProduct, useDispatch());
+
+  useEffect(() => {
+    getAllProducts().then((response) => {
+      setSpecials(
+        response.payload.filter((product) => product.type === "special")
+      );
+    });
+  }, []);
+
     return specials.map((item) => (
       <div className="col-md-6 col-lg-4 col-xl-3 p-2" key={item.id}>
         <div className="special-img position-relative overflow-hidden">
@@ -34,4 +46,3 @@ export default function Specials() {
       </div>
     </section>
   );
-}
